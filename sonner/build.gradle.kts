@@ -1,5 +1,5 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -9,7 +9,11 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+group = "moe.styx.forks.dokar3"
+version = "0.4.0-SNAPSHOT1"
+
 kotlin {
+    jvmToolchain(17)
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "compose-sooner"
@@ -42,11 +46,6 @@ kotlin {
 
     androidTarget {
         publishLibraryVariants("release")
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "11"
-            }
-        }
     }
 
     iosX64()
@@ -91,8 +90,8 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
@@ -104,5 +103,25 @@ tasks
     .configureEach {
         compilerOptions
             .jvmTarget
-            .set(JvmTarget.JVM_11)
+            .set(JvmTarget.JVM_17)
     }
+
+publishing {
+    repositories {
+        maven {
+            name = "Styx"
+            url =
+                if (version.toString().contains("-SNAPSHOT", true) || !System.getenv("SNAPSHOT_COMMIT").isNullOrBlank())
+                    uri("https://repo.styx.moe/snapshots")
+                else
+                    uri("https://repo.styx.moe/releases")
+            credentials {
+                username = System.getenv("STYX_REPO_TOKEN")
+                password = System.getenv("STYX_REPO_SECRET")
+            }
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
+}
