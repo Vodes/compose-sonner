@@ -1,5 +1,4 @@
 rootProject.name = "compose-sonner"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
@@ -18,5 +17,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":sample")
 include(":sonner")

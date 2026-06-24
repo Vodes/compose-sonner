@@ -10,13 +10,13 @@ plugins {
 }
 
 group = "moe.styx.forks.dokar3"
-version = "0.4.0-SNAPSHOT1"
+version = "0.4.1"
 
 kotlin {
     jvmToolchain(17)
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        moduleName = "compose-sooner"
+        outputModuleName.set("compose-sooner")
         browser {
             commonWebpackConfig {
                 outputFileName = "compose-sooner.js"
@@ -30,7 +30,7 @@ kotlin {
         binaries.library()
     }
     js(IR) {
-        moduleName = "compose-sooner-jscanvas"
+        outputModuleName.set("compose-sooner-jscanvas")
         browser {
             commonWebpackConfig {
                 outputFileName = "compose-sooner-jscanvas.js"
